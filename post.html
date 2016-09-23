@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>POST Test</title>
+  <style>
+    #responseDiv{ border: solid 1px #444; width: 80%; margin: 3em auto; }
+  </style>
+  <script src="jquery-2.2.1.js"></script>
+  <script>
+    pair = 1;
+    function addPair() {
+      pair++;
+      $('#form1').append("\n<label>Key:&nbsp;<input type=\"text\" id=\"k" + pair + "\"></label>&nbsp;<label>Value:&nbsp;<input type=\"text\" id=\"v" + pair + "\"></label><br>");
+    }
+    function buildStr() {
+      i = 1;
+      dStr = "";
+      while (i < pair) {
+        dStr += $('#k' + i).val() + "=" + $('#v' + i).val() + "&";
+          i++;
+      }
+      dStr += $('#k' + i).val() + "=" + $('#v' + i).val();
+      console.log("dStr: " + dStr);
+      $('#responseDiv').html(dStr);
+      sendData(dStr);
+    }
+    function sendData(dStr) {
+      $.ajax({
+        url: $('#url').val(),
+        type: "POST",
+        data: dStr,
+        success: function testS(resp){$('#responseDiv').html(resp);},
+        error: function testE(resp){$('#responseDiv').html('There was an error<br>\n<br>\n' + resp);},
+      });
+    }
+  </script>
+</head>
+<body>
+  <form id="form1">
+    <label>URL:&nbsp;<input type="text" id="url"></label><br><br>
+    <label>Key:&nbsp;<input type="text" id="k1"></label>&nbsp;<label>Value:&nbsp;<input type="text" id="v1"></label><br>
+  </form><br>
+  <button onclick="addPair()">Add K/V Pair</button><br>
+  <button onclick="buildStr()">POST</button>
+  <div id="responseDiv">
+
+  </div>
+</body>
+</html>
